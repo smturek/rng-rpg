@@ -57,31 +57,109 @@ function getRandom(min, max) {
 }
 
 function generateLevel() {
-    var level = [];
+    var level = [];   //access specific coord -> level[y coord][x coord]
     var levelRow = [];
 
-    //generates a row within the level and pushes it into the level array
-    //generates a 1 for a wall and a 0 for a floor
+    var numberOfRooms = 3;
+    var rooms = [];
+
+
+    //creates a level of pure walls
     for(var i = 0; i < 20; i++) {
-
-        if(i <= 7 || i >= 12) {
-            for(var j = 0; j < 40; j++) {
-                levelRow.push(1);
-            }
-        }
-
-        if(i > 7 && i < 12) {
-            levelRow.push(1);
-            for(var j = 0; j < 37; j++) {
-                levelRow.push(0);
-            }
+        for(var j = 0; j < 40; j++) {
             levelRow.push(1);
         }
-
         level.push(levelRow);
         levelRow = [];
     }
-    console.log(level);
+
+    //creates a seed array for the rooms
+    for(var i = 0; i < numberOfRooms; i++) {
+        //rooms[i][1] == y coord, rooms[i][0] == x coord
+        rooms.push([getRandom(1, 37), getRandom(1, 19)]);
+    }
+
+    for(var i = 0; i < rooms.length; i++) {
+        //carves out seed for room
+        level[rooms[i][1]][rooms[i][0]] = 0;
+
+        //carves out a 3x3 room with seed at center
+        level[rooms[i][1] - 1][rooms[i][0]] = 0;
+        level[rooms[i][1] + 1][rooms[i][0]] = 0;
+        level[rooms[i][1]][rooms[i][0] - 1] = 0;
+        level[rooms[i][1]][rooms[i][0] + 1] = 0;
+        level[rooms[i][1] + 1][rooms[i][0] + 1] = 0;
+        level[rooms[i][1] + 1][rooms[i][0] - 1] = 0;
+        level[rooms[i][1] - 1][rooms[i][0] + 1] = 0;
+        level[rooms[i][1] - 1][rooms[i][0] - 1] = 0;
+
+        //carves out a hallway that connects rooms that are next to each other in the rooms array
+        //skips the first room in the array and then compares all the following rooms to the one that comes before it
+        if(i !== 0) {
+            var yDifference;
+            var xDifference;
+            var xMagnitude;
+            //carves out a vertical path from lower room to the y of the higher room's seed
+            //greater y values = lower on the screen
+            //if the room itself is lower
+            if(rooms[i][1] > rooms[i - 1][1]) {
+                yDifference = rooms[i][1] - rooms[i - 1][1];
+                for(var j = 0; j <= yDifference; j++) {
+                    level[rooms[i][1] - j][rooms[i][0]] = 0;
+                }
+                //carves out a horizontal path from the higher room to the path coming out of the lower room
+                //greater x values = further right on the screen
+                xDifference = rooms[i - 1][0] - rooms[i][0];
+
+                if(xDifference < 0) {
+                    xMagnitude = xDifference * -1;
+                }
+                else {
+                    xMagnitude = xDifference;
+                }
+
+                for(var j = 0; j <= xMagnitude; j++) {
+                    if(xDifference < 0) {
+                        level[rooms[i - 1][1]][rooms[i - 1][0] + j] = 0;
+                    }
+                    else {
+                        level[rooms[i - 1][1]][rooms[i - 1][0] - j] = 0;
+                    }
+                }
+            }
+            //if the room before it is lower
+            else {
+                yDifference = rooms[i - 1][1] - rooms[i][1];
+                for(var j = 0; j <= yDifference; j++) {
+                    level[rooms[i - 1][1] - j][rooms[i - 1][0]] = 0;
+                }
+                //carves out a horizontal path from the higher room to the path coming out of the lower room
+                //greater x values = further right on the screen
+                xDifference = rooms[i][0] - rooms[i - 1][0];
+
+                if(xDifference < 0) {
+                    xMagnitude = xDifference * -1;
+                }
+                else {
+                    xMagnitude = xDifference;
+                }
+
+                for(var j = 0; j <= xMagnitude; j++) {
+                    if(xDifference < 0) {
+                        level[rooms[i][1]][rooms[i][0] + j] = 0;
+                    }
+                    else {
+                        level[rooms[i][1]][rooms[i][0] - j] = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    //puts player in the middle of the first room
+    player.x = rooms[0][0] * 32;
+    player.y = rooms[0][1] * 32;
+
     return level;
 }
 
