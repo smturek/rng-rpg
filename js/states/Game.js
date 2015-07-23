@@ -2,16 +2,7 @@ var RngRpg = RngRpg || {};
 
 RngRpg.GameState = {
     init: function() {
-        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.scale.pageAlignHorizontally = true;
-        this.scale.pageAlignVertically = true;
-
-        this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    },
-    preload: function() {
-        this.game.load.image('player', 'assets/player.png');
-        this.game.load.image('wall', 'assets/wall.png');
-        this.game.load.image('floor', 'assets/floor.png');
+        
     },
     create: function() {
         this.walls = this.game.add.group();
