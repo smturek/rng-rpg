@@ -11,7 +11,7 @@ RngRpg.PreloadState = {
         this.game.load.image('player', 'assets/images/player.png');
         this.game.load.image('wall', 'assets/images/wall.png');
         this.game.load.image('floor', 'assets/images/floor.png');
-        this.game.load.image('start', 'assets/images/arrowBlue_right.png');
+        this.game.load.image('sword', 'assets/images/cursorSword_bronze.png');
 
     },
     create: function() {

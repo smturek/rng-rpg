@@ -2,7 +2,7 @@ var RngRpg = RngRpg || {};
 
 RngRpg.GameState = {
     init: function() {
-        
+
     },
     create: function() {
         this.walls = this.game.add.group();
@@ -14,11 +14,18 @@ RngRpg.GameState = {
         this.game.physics.arcade.enable(this.player);
         this.player.body.collideWorldBounds= true;
 
+        this.exit = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
+        this.game.physics.arcade.enable(this.exit);
+
+        // this.monster = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
+        // this.game.physics.arcade.enable(this.monster);
+
         this.renderLevel(this.generateLevel());
     },
     update: function() {
         //collision groups
         this.game.physics.arcade.collide(this.player, this.walls);
+        this.game.physics.arcade.overlap(this.player, this.exit, this.nextLevel, null, this);
 
         //controls for player
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
@@ -48,7 +55,7 @@ RngRpg.GameState = {
         var level = [];   //access specific coord -> level[y coord][x coord]
         var levelRow = [];
 
-        var numberOfRooms = 3;
+        var numberOfRooms = 15;
         var rooms = [];
 
 
@@ -148,6 +155,11 @@ RngRpg.GameState = {
         this.player.x = rooms[0][0] * 32;
         this.player.y = rooms[0][1] * 32;
 
+        //puts exit in the middle of the second room
+        this.exit.x = rooms[1][0] * 32;
+        this.exit.y = rooms[1][1] * 32;
+
+
         return level;
     },
     renderLevel: function(level) {
@@ -167,5 +179,10 @@ RngRpg.GameState = {
                 }
             }
         }
+        console.log("WALLS: " + this.walls.length);
+    },
+    nextLevel: function() {
+        this.walls.removeChildren();
+        this.renderLevel(this.generateLevel());
     }
 };
