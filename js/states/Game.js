@@ -52,7 +52,7 @@ RngRpg.GameState = {
         return Math.floor(Math.random() * (max - min)) + min;
     },
     generateLevel: function() {
-        var level = [];   //access specific coord -> level[y coord][x coord]
+        this.level = [];   //access specific coord -> level[y coord][x coord]
         var levelRow = [];
 
         var numberOfRooms = 15;
@@ -64,7 +64,7 @@ RngRpg.GameState = {
             for(var j = 0; j < 40; j++) {
                 levelRow.push(1);
             }
-            level.push(levelRow);
+            this.level.push(levelRow);
             levelRow = [];
         }
 
@@ -76,17 +76,17 @@ RngRpg.GameState = {
 
         for(var i = 0; i < rooms.length; i++) {
             //carves out seed for room
-            level[rooms[i][1]][rooms[i][0]] = 0;
+            this.level[rooms[i][1]][rooms[i][0]] = 0;
 
             //carves out a 3x3 room with seed at center
-            level[rooms[i][1] - 1][rooms[i][0]] = 0;
-            level[rooms[i][1] + 1][rooms[i][0]] = 0;
-            level[rooms[i][1]][rooms[i][0] - 1] = 0;
-            level[rooms[i][1]][rooms[i][0] + 1] = 0;
-            level[rooms[i][1] + 1][rooms[i][0] + 1] = 0;
-            level[rooms[i][1] + 1][rooms[i][0] - 1] = 0;
-            level[rooms[i][1] - 1][rooms[i][0] + 1] = 0;
-            level[rooms[i][1] - 1][rooms[i][0] - 1] = 0;
+            this.level[rooms[i][1] - 1][rooms[i][0]] = 0;
+            this.level[rooms[i][1] + 1][rooms[i][0]] = 0;
+            this.level[rooms[i][1]][rooms[i][0] - 1] = 0;
+            this.level[rooms[i][1]][rooms[i][0] + 1] = 0;
+            this.level[rooms[i][1] + 1][rooms[i][0] + 1] = 0;
+            this.level[rooms[i][1] + 1][rooms[i][0] - 1] = 0;
+            this.level[rooms[i][1] - 1][rooms[i][0] + 1] = 0;
+            this.level[rooms[i][1] - 1][rooms[i][0] - 1] = 0;
 
             //carves out a hallway that connects rooms that are next to each other in the rooms array
             //skips the first room in the array and then compares all the following rooms to the one that comes before it
@@ -100,7 +100,7 @@ RngRpg.GameState = {
                 if(rooms[i][1] > rooms[i - 1][1]) {
                     yDifference = rooms[i][1] - rooms[i - 1][1];
                     for(var j = 0; j <= yDifference; j++) {
-                        level[rooms[i][1] - j][rooms[i][0]] = 0;
+                        this.level[rooms[i][1] - j][rooms[i][0]] = 0;
                     }
                     //carves out a horizontal path from the higher room to the path coming out of the lower room
                     //greater x values = further right on the screen
@@ -115,10 +115,10 @@ RngRpg.GameState = {
 
                     for(var j = 0; j <= xMagnitude; j++) {
                         if(xDifference < 0) {
-                            level[rooms[i - 1][1]][rooms[i - 1][0] + j] = 0;
+                            this.level[rooms[i - 1][1]][rooms[i - 1][0] + j] = 0;
                         }
                         else {
-                            level[rooms[i - 1][1]][rooms[i - 1][0] - j] = 0;
+                            this.level[rooms[i - 1][1]][rooms[i - 1][0] - j] = 0;
                         }
                     }
                 }
@@ -126,7 +126,7 @@ RngRpg.GameState = {
                 else {
                     yDifference = rooms[i - 1][1] - rooms[i][1];
                     for(var j = 0; j <= yDifference; j++) {
-                        level[rooms[i - 1][1] - j][rooms[i - 1][0]] = 0;
+                        this.level[rooms[i - 1][1] - j][rooms[i - 1][0]] = 0;
                     }
                     //carves out a horizontal path from the higher room to the path coming out of the lower room
                     //greater x values = further right on the screen
@@ -141,10 +141,10 @@ RngRpg.GameState = {
 
                     for(var j = 0; j <= xMagnitude; j++) {
                         if(xDifference < 0) {
-                            level[rooms[i][1]][rooms[i][0] + j] = 0;
+                            this.level[rooms[i][1]][rooms[i][0] + j] = 0;
                         }
                         else {
-                            level[rooms[i][1]][rooms[i][0] - j] = 0;
+                            this.level[rooms[i][1]][rooms[i][0] - j] = 0;
                         }
                     }
                 }
@@ -160,7 +160,7 @@ RngRpg.GameState = {
         this.exit.y = rooms[1][1] * 32;
 
 
-        return level;
+        return this.level;
     },
     renderLevel: function(level) {
         for(var i = 0; i < level.length; i++) {
@@ -179,10 +179,11 @@ RngRpg.GameState = {
                 }
             }
         }
-        console.log("WALLS: " + this.walls.length);
     },
     nextLevel: function() {
+        this.walls.callAll('kill');
         this.walls.removeChildren();
+        this.floors.removeChildren();
         this.renderLevel(this.generateLevel());
     }
 };
