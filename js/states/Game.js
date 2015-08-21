@@ -17,8 +17,8 @@ RngRpg.GameState = {
         this.exit = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
         this.game.physics.arcade.enable(this.exit);
 
-        // this.monster = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
-        // this.game.physics.arcade.enable(this.monster);
+        this.monster = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'enemy');
+        this.game.physics.arcade.enable(this.monster);
 
         this.renderLevel(this.generateLevel());
     },
