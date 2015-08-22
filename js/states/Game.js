@@ -12,9 +12,10 @@ RngRpg.GameState = {
 
         this.player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
         this.game.physics.arcade.enable(this.player);
+        this.player.anchor.setTo(0.5);
         this.player.body.collideWorldBounds= true;
 
-        this.exit = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
+        this.exit = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'exit');
         this.game.physics.arcade.enable(this.exit);
 
         this.monster = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'enemy');
@@ -155,9 +156,13 @@ RngRpg.GameState = {
         this.player.x = rooms[0][0] * 32;
         this.player.y = rooms[0][1] * 32;
 
-        //puts exit in the middle of the second room
-        this.exit.x = rooms[1][0] * 32;
-        this.exit.y = rooms[1][1] * 32;
+        //puts exit in the middle of the last room
+        this.exit.x = rooms[rooms.length - 1][0] * 32;
+        this.exit.y = rooms[rooms.length - 1][1] * 32;
+
+        //puts exit in the middle of the penultimate room
+        this.monster.x = rooms[rooms.length - 2][0] * 32;
+        this.monster.y = rooms[rooms.length - 2][1] * 32;
 
 
         return this.level;
