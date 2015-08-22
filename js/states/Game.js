@@ -21,12 +21,15 @@ RngRpg.GameState = {
         this.monster = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'enemy');
         this.game.physics.arcade.enable(this.monster);
 
+        this.battle = new RngRpg.Battle(this.game);
+
         this.renderLevel(this.generateLevel());
     },
     update: function() {
         //collision groups
         this.game.physics.arcade.collide(this.player, this.walls);
         this.game.physics.arcade.overlap(this.player, this.exit, this.nextLevel, null, this);
+        this.game.physics.arcade.overlap(this.player, this.monster, this.battle.initialize);
 
         //controls for player
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
