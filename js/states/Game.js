@@ -29,27 +29,29 @@ RngRpg.GameState = {
         //collision groups
         this.game.physics.arcade.collide(this.player, this.walls);
         this.game.physics.arcade.overlap(this.player, this.exit, this.nextLevel, null, this);
-        this.game.physics.arcade.overlap(this.player, this.monster, this.battle.initialize);
+        this.game.physics.arcade.overlap(this.player, this.monster, this.prepBattle, null, this);
 
         //controls for player
-        if(this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
-            this.player.body.velocity.x = -175;
-        }
-        else if (this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
-            this.player.body.velocity.x = 175;
-        }
-        else {
-            this.player.body.velocity.x = 0;
-        }
+        if(!this.noMovement) {
+            if(this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
+                this.player.body.velocity.x = -175;
+            }
+            else if (this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
+                this.player.body.velocity.x = 175;
+            }
+            else {
+                this.player.body.velocity.x = 0;
+            }
 
-        if(this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
-            this.player.body.velocity.y = -175;
-        }
-        else if (this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
-            this.player.body.velocity.y = 175;
-        }
-        else {
-            this.player.body.velocity.y = 0;
+            if(this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
+                this.player.body.velocity.y = -175;
+            }
+            else if (this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
+                this.player.body.velocity.y = 175;
+            }
+            else {
+                this.player.body.velocity.y = 0;
+            }
         }
     },
     getRandom: function(min, max) {
@@ -193,5 +195,13 @@ RngRpg.GameState = {
         this.walls.removeChildren();
         this.floors.removeChildren();
         this.renderLevel(this.generateLevel());
+    },
+    prepBattle: function() {
+        //stop the player and prevent any further movement
+        this.noMovement = true;
+        this.player.body.velocity.x = 0;
+        this.player.body.velocity.y = 0;
+
+        this.battle.startBattle();
     }
 };
