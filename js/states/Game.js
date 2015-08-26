@@ -14,6 +14,7 @@ RngRpg.GameState = {
         this.game.physics.arcade.enable(this.player);
         this.player.anchor.setTo(0.5);
         this.player.body.collideWorldBounds= true;
+        this.player.health = 10 || this.player.health
 
         this.exit = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'exit');
         this.game.physics.arcade.enable(this.exit);
@@ -196,12 +197,12 @@ RngRpg.GameState = {
         this.floors.removeChildren();
         this.renderLevel(this.generateLevel());
     },
-    prepBattle: function() {
+    prepBattle: function(player, monster) {
         //stop the player and prevent any further movement
         this.noMovement = true;
         this.player.body.velocity.x = 0;
         this.player.body.velocity.y = 0;
 
-        this.battle.startBattle();
+        this.battle.startBattle(player, monster);
     }
 };

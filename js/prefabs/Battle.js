@@ -16,7 +16,10 @@ RngRpg.Battle = function(game) {
     this.battleDisplayGroup.add(this.battleBackground);
 };
 
-RngRpg.Battle.prototype.startBattle = function(player, monster, noMovement) {
+RngRpg.Battle.prototype.startBattle = function(player, monster) {
+    this.player = player;
+    this.monster = monster;
+
     //bring up battle screen
     var showBattleTween = this.game.add.tween(this.battleDisplayGroup);
     showBattleTween.to({y: 0}, 150);
@@ -25,8 +28,12 @@ RngRpg.Battle.prototype.startBattle = function(player, monster, noMovement) {
     showBattleTween.onComplete.add(this.setUpGUI, this);
 };
 
-RngRpg.Battle.prototype.setUpGUI = function() {
+RngRpg.Battle.prototype.setUpGUI = function(player, monster) {
     var style = {font: '14px Arial', fill: '#fff'};
 
-    //create 
+    console.log(this.player.health);
+
+    //creates text for battle screen
+    this.playerHealth = this.game.add.text(30,10, '0', style);
+    this.playerHealth.text = this.player.health;
 };
